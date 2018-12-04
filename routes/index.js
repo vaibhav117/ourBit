@@ -7,7 +7,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/response', (req, res) => {
-  res.render('index');
+  try{
+    res.render('index');
+  }
+  catch(err)
+  {
+    console.log(err);
+  }
 });
 
 
@@ -17,6 +23,7 @@ router.post('/upload',(req,res) => {
   /*Requires env variable : export GOOGLE_APPLICATION_CREDENTIALS="/Users/Galactica/Desktop/Projects/hack_for_good/My_First_Project-950bc161e559.json"*/
 
   // Imports the Google Cloud client library
+  
   const speech = require('@google-cloud/speech');
   const fs = require('fs');
 
@@ -30,7 +37,8 @@ router.post('/upload',(req,res) => {
 
 
   // Reads a local audio file and converts it to base64
-  const file = req.file;
+  const file = req.files;
+  console.log(file);
   const audioBytes = file.toString('base64');
 
   // The audio file's encoding, sample rate in hertz, and BCP-47 language code
@@ -46,8 +54,6 @@ router.post('/upload',(req,res) => {
     audio: audio,
     config: config,
   };
-
-
 
   // Detects speech in the audio file
   client

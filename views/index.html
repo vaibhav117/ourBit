@@ -23,6 +23,7 @@ const recordAudio = () =>
           const audioUrl = URL.createObjectURL(audioBlob);
           const audio = new Audio(audioUrl);
           const play = () => audio.play();
+          uploadAudioFile(blobToFile(audioBlob));
           resolve({ audioBlob, audioUrl, play });
         });
 
@@ -33,14 +34,39 @@ const recordAudio = () =>
   });
 
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+const readKey = () => new Promise(resolve => window.addEventListener('keypress', resolve, { once: true }));
+
 
 (async () => {
   const recorder = await recordAudio();
+  const x = await readKey();
   recorder.start();
-  await sleep(3000);
+  
+  const y = await readKey();
   const audio = await recorder.stop();
   audio.play();
+  
+  
 })();
+
+  function uploadAudioFile(file) {
+    var audioUploadUrl = 'http://localhost:3000/upload';
+    var oReq = new XMLHttpRequest();
+    oReq.open("POST", audioUploadUrl, true);
+    oReq.onload = function (oEvent) {
+      console.log(oEvent);
+      console.log('Uploaded the audio file!');
+      console.log(oReq.responseText);
+    };
+    oReq.send(file);
+  }
+
+  function blobToFile(theBlob, fileName) {
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    theBlob.lastModifiedDate = new Date();
+    theBlob.name = fileName;
+    return theBlob;
+  }
 
 </script>
   <!-- load font awesome here for icon used on the page -->
