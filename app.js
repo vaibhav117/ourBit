@@ -88,8 +88,8 @@ client
   });
 
 
-app.get('\stream',fucntion(req,res){
-  res.sendFile();
+app.get('/response', (req, res) => {
+  res.send('index');
 });
 //********************************************************************************* */
 module.exports = app;
