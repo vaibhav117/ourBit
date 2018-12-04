@@ -11,7 +11,7 @@ router.get('/response', (req, res) => {
 });
 
 
-router.get('/upload',(req,res) => {
+router.post('/upload',(req,res) => {
   //************************************* GOOGLE API CALL ************************************* */
 
   /*Requires env variable : export GOOGLE_APPLICATION_CREDENTIALS="/Users/Galactica/Desktop/Projects/hack_for_good/My_First_Project-950bc161e559.json"*/
