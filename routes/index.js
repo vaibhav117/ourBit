@@ -7,8 +7,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/response', (req, res) => {
-  console.log('Creating the ')
   res.render('index');
 });
+
+
 
 module.exports = router;
