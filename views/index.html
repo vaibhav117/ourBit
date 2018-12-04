@@ -1,26 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <script>
-    var player = document.getElementById('player');
+    
+const recordAudio = () =>
+  new Promise(async resolve => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(stream);
+    const audioChunks = [];
 
-    var handleSuccess = function (stream) {
-      var context = new AudioContext();
-      var source = context.createMediaStreamSource(stream);
-      var processor = context.createScriptProcessor(1024, 1, 1);
+    mediaRecorder.addEventListener("dataavailable", event => {
+      audioChunks.push(event.data);
+    });
 
-      source.connect(processor);
-      processor.connect(context.destination);
+    const start = () => mediaRecorder.start();
 
-      processor.onaudioprocess = function (e) {
-        // Do something with the data, i.e Convert this to WAV
-        console.log(e.inputBuffer);
-      };
-    };
+    const stop = () =>
+      new Promise(resolve => {
+        mediaRecorder.addEventListener("stop", () => {
+          const audioBlob = new Blob(audioChunks);
+          const audioUrl = URL.createObjectURL(audioBlob);
+          const audio = new Audio(audioUrl);
+          const play = () => audio.play();
+          resolve({ audioBlob, audioUrl, play });
+        });
 
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-      .then(handleSuccess);
-  </script>
+        mediaRecorder.stop();
+      });
+
+    resolve({ start, stop });
+  });
+
+const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+
+(async () => {
+  const recorder = await recordAudio();
+  recorder.start();
+  await sleep(3000);
+  const audio = await recorder.stop();
+  audio.play();
+})();
+
+</script>
   <!-- load font awesome here for icon used on the page -->
 </head>
 <body>
