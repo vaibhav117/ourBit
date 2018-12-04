@@ -37,7 +37,11 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 //************************************* GOOGLE API CALL ************************************* */
+
+/*Requires env variable : export GOOGLE_APPLICATION_CREDENTIALS="/Users/Galactica/Desktop/Projects/hack_for_good/My_First_Project-950bc161e559.json"*/
 
 // Imports the Google Cloud client library
 const speech = require('@google-cloud/speech');
@@ -73,6 +77,8 @@ const request = {
   config: config,
 };
 
+
+
 // Detects speech in the audio file
 client
   .recognize(request)
@@ -88,8 +94,6 @@ client
   });
 
 
-app.get('/response', (req, res) => {
-  res.send('index');
-});
+
 //********************************************************************************* */
 module.exports = app;
